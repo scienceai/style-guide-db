@@ -1,0 +1,64 @@
+{
+  "name": "style-guide-db",
+  "version": "0.0.0",
+  "description": "Searchable database of style guides",
+  "main": "dist/index.js",
+  "scripts": {
+    "init": "npm run delete && npm run create && npm run push",
+    "create": "curl -XPUT $COUCH_PROTOCOL//$COUCH_ADMIN_USERNAME:$COUCH_ADMIN_PASSWORD@$COUCH_HOST:$COUCH_PORT/$COUCH_STYLE_GUIDE_DB",
+    "delete": "curl -XDELETE $COUCH_PROTOCOL//$COUCH_ADMIN_USERNAME:$COUCH_ADMIN_PASSWORD@$COUCH_HOST:$COUCH_PORT/$COUCH_STYLE_GUIDE_DB",
+    "push": "./node_modules/.bin/couchapp push ./ddoc.js $COUCH_PROTOCOL//$COUCH_ADMIN_USERNAME:$COUCH_ADMIN_PASSWORD@$COUCH_HOST:$COUCH_PORT/$COUCH_STYLE_GUIDE_DB",
+    "wiley": "mkdir -p data && curl -L -o ./data/wiley.xls http://wileyonlinelibrary.com/journals-list",
+    "start": "./node_modules/.bin/babel-node src/index.js",
+    "build-css": "./node_modules/.bin/cssnext --sourcemap style.css bundle.css",
+    "watch-css": "./node_modules/.bin/nodemon -e css --watch style.css --exec 'npm run build-css'",
+    "build-js": "./node_modules/.bin/browserify app.js > bundle.js",
+    "watch-js": "./node_modules/.bin/watchify app.js -o bundle.js -dv",
+    "watch": "npm run watch-js & npm run watch-css",
+    "build": "npm run build-js && npm run build-css",
+    "lucene": "$(brew info couchdb-lucene | tail -1)",
+    "prepublish": "rm -rf dist && ./node_modules/.bin/babel src --out-dir dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/scienceai/style-guide-db.git"
+  },
+  "keywords": [
+    "style",
+    "guides",
+    "database"
+  ],
+  "author": "Sebastien Ballesteros",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/scienceai/style-guide-db/issues"
+  },
+  "homepage": "https://github.com/scienceai/style-guide-db#readme",
+  "dependencies": {
+    "async": "^1.5.0",
+    "doi-regex": "^0.1.4",
+    "jsdom": "^7.2.2",
+    "request": "^2.67.0",
+    "sanitize-html": "^1.11.2",
+    "slug": "^0.9.1",
+    "xlsx": "^0.8.0"
+  },
+  "devDependencies": {
+    "babel": "^6.3.26",
+    "babel-cli": "^6.3.17",
+    "babel-preset-es2015": "^6.3.13",
+    "babelify": "^7.2.0",
+    "browserify": "^12.0.1",
+    "couchapp": "^0.11.0",
+    "cssnext": "^1.8.4",
+    "envify": "^3.4.0",
+    "nodemon": "^1.8.1",
+    "watchify": "^3.6.1"
+  },
+  "browserify": {
+    "transform": [
+      "envify",
+      "babelify"
+    ]
+  }
+}
