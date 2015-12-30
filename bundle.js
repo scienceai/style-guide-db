@@ -24,7 +24,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (data.rows && data.rows.length) {
           $ul.innerHTML = data.rows.map(function (row) {
-            return '<li>\n                 <h2><a href="' + row.fields.url + '">' + row.fields.title + '</a></h2>\n                 <span>' + row.fields.publisher + ' - score: ' + row.score + '</span>\n                 <p>' + row.fields.about + '</p>\n               </li>';
+            console.log(row);
+            return '<li>\n                 <h2><a href="' + row.fields.url + '">' + row.fields.title + '</a></h2>\n                 <span>' + row.fields.publisher + ' - score: ' + (row.score || row.order[0]) + '</span>\n                 <p>' + row.fields.about + '</p>\n               </li>';
           }).join('');
         } else {
           $ul.innerHTML = '<li>no results found</li>';

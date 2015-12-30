@@ -21,10 +21,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (data.rows && data.rows.length) {
           $ul.innerHTML = data.rows.map(row => {
+            console.log(row);
             return (
               `<li>
                  <h2><a href="${row.fields.url}">${row.fields.title}</a></h2>
-                 <span>${row.fields.publisher} - score: ${row.score}</span>
+                 <span>${row.fields.publisher} - score: ${row.score || row.order[0]}</span>
                  <p>${row.fields.about}</p>
                </li>`
             );
