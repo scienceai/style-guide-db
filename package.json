@@ -4,16 +4,25 @@
   "description": "Searchable database of style guides",
   "main": "dist/index.js",
   "scripts": {
-    "init": "npm run delete && npm run create && npm run push",
+    "init": "mkdir -p data && npm run delete && npm run create && npm run push",
     "create": "curl -XPUT $COUCH_PROTOCOL//$COUCH_ADMIN_USERNAME:$COUCH_ADMIN_PASSWORD@$COUCH_HOST:$COUCH_PORT/$COUCH_STYLE_GUIDE_DB",
     "delete": "curl -XDELETE $COUCH_PROTOCOL//$COUCH_ADMIN_USERNAME:$COUCH_ADMIN_PASSWORD@$COUCH_HOST:$COUCH_PORT/$COUCH_STYLE_GUIDE_DB",
     "push": "./node_modules/.bin/couchapp push ./ddoc.js $COUCH_PROTOCOL//$COUCH_ADMIN_USERNAME:$COUCH_ADMIN_PASSWORD@$COUCH_HOST:$COUCH_PORT/$COUCH_STYLE_GUIDE_DB",
-    "wiley": "mkdir -p data && curl -L -o ./data/wiley.xls http://wileyonlinelibrary.com/journals-list",
-    "start": "./node_modules/.bin/babel-node src/index.js",
+    "data-scopus": "curl -L -o ./data/scopus.xlsx https://www.elsevier.com/__data/assets/excel_doc/0015/91122/title_list.xlsx",
+    "data-wiley": "curl -L -o ./data/wiley.xls http://wileyonlinelibrary.com/journals-list",
+    "data-elsevier": "curl -L -o ./data/elsevier.xls http://info.sciencedirect.com/techsupport/journals/jnlactive.xls",
+    "data-sage": "curl -L -o ./data/sage.xlsx https://us.sagepub.com/sites/default/files/premier_2016_1.xlsx",
+    "data-taylor-and-francis": "curl -L -o ./data/taylor-and-francis.tsv http://www.tandfonline.com/action/contentHoldings?code=JCTCPF_N_2013_016",
+    "data": "npm run data-wiley && npm run data-elsevier && npm run data-sage && npm run data-taylor-and-francis",
+    "fetch-wiley": "./node_modules/.bin/babel-node src/wiley.js",
+    "fetch-elsevier": "./node_modules/.bin/babel-node src/elsevier.js",
+    "fetch-sage": "./node_modules/.bin/babel-node src/sage.js",
+    "fetch-taylor-and-francis": "./node_modules/.bin/babel-node src/taylor-and-francis.js",
+    "fetch": "npm run fetch-wiley && npm run fetch-elsevier && npm run fetch-sage && npm run fetch-taylor-and-francis",
     "build-css": "./node_modules/.bin/cssnext --sourcemap style.css bundle.css",
     "watch-css": "./node_modules/.bin/nodemon -e css --watch style.css --exec 'npm run build-css'",
-    "build-js": "./node_modules/.bin/browserify app.js > bundle.js",
-    "watch-js": "./node_modules/.bin/watchify app.js -o bundle.js -dv",
+    "build-js": "./node_modules/.bin/browserify app.js -t [ babelify --presets [ es2015 ] ] -g envify > bundle.js",
+    "watch-js": "./node_modules/.bin/watchify app.js -t [ babelify --presets [ es2015 ] ] -g envify -o bundle.js -dv",
     "watch": "npm run watch-js & npm run watch-css",
     "build": "npm run build-js && npm run build-css",
     "lucene": "$(brew info couchdb-lucene | tail -1)",
@@ -36,7 +45,10 @@
   "homepage": "https://github.com/scienceai/style-guide-db#readme",
   "dependencies": {
     "async": "^1.5.0",
+    "csv-parser": "^1.9.1",
     "doi-regex": "^0.1.4",
+    "history": "^1.17.0",
+    "is-url": "^1.2.1",
     "jsdom": "^7.2.2",
     "request": "^2.67.0",
     "sanitize-html": "^1.11.2",
@@ -54,11 +66,5 @@
     "envify": "^3.4.0",
     "nodemon": "^1.8.1",
     "watchify": "^3.6.1"
-  },
-  "browserify": {
-    "transform": [
-      "envify",
-      "babelify"
-    ]
   }
 }

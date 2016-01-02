@@ -1,6 +1,17 @@
 module.exports = {
   _id: '_design/styleguides',
 
+  views: {
+    byPublisher: {
+      map: function(doc) {
+        if (doc.publisher) {
+          emit(doc.publisher, null);
+        }
+      },
+      reduce: '_count'
+    }
+  },
+
   // couchdb-lucene
   fulltext: {
     styleguides: {
