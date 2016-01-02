@@ -14,7 +14,7 @@ module.exports = {
     floppyVsHyperlink: {
       map: function(doc) {
         if (doc.text) {
-          if (/floppy|diskette|ZIP-disk|CD/i.test(doc.text)) {
+          if (/floppy|diskette|disk|ZIP-disk/i.test(doc.text)) {
             emit('floppy', null);
           }
           if (/hyperlink/i.test(doc.text)) {
