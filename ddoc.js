@@ -46,7 +46,22 @@ module.exports = {
         }
       },
       reduce: '_count'
+    },
+
+    input: {
+      map: function(doc) {
+        if (doc.text) {
+          if (/Word|WORD|\.doc|\.docx|\.DOC|\.DOCX/.test(doc.text)) {
+            emit('word', null);
+          }
+          if (/latex|\.tex/i.test(doc.text)) {
+            emit('latex', null);
+          }
+        }
+      },
+      reduce: '_count'
     }
+
   },
 
   // couchdb-lucene
