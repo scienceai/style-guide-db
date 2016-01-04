@@ -23,6 +23,29 @@ module.exports = {
         }
       },
       reduce: '_count'
+    },
+
+    styles: {
+      map: function(doc) {
+        if (doc.text) {
+          if (/MLA|M.L.A./i.test(doc.text)) {
+            emit('MLA', null);
+          }
+          if (/APA|A.P.A./i.test(doc.text)) {
+            emit('APA', null);
+          }
+          if (/Chicago|CMS|CMOS/i.test(doc.text)) {
+            emit('Chicago', null);
+          }
+          if (/Harvard/i.test(doc.text)) {
+            emit('Harvard', null);
+          }
+          if (/Vancouver/i.test(doc.text)) {
+            emit('Vancouver', null);
+          }
+        }
+      },
+      reduce: '_count'
     }
   },
 
