@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
               `<li>
                 <h2><a href="${row.fields.url}">${row.fields.title}</a></h2>
                 <span>${row.fields.publisher} - score: ${row.score || row.order[0]}</span>
-                <p>${row.fields.about}</p>
+                <p>${row.fields.about || ''}</p>
                </li>`
             );
           }).join('');

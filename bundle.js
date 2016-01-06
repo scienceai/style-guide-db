@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (data.rows && data.rows.length) {
           $ul.innerHTML = data.rows.map(function (row) {
-            return '<li>\n                <h2><a href="' + row.fields.url + '">' + row.fields.title + '</a></h2>\n                <span>' + row.fields.publisher + ' - score: ' + (row.score || row.order[0]) + '</span>\n                <p>' + row.fields.about + '</p>\n               </li>';
+            return '<li>\n                <h2><a href="' + row.fields.url + '">' + row.fields.title + '</a></h2>\n                <span>' + row.fields.publisher + ' - score: ' + (row.score || row.order[0]) + '</span>\n                <p>' + (row.fields.about || '') + '</p>\n               </li>';
           }).join('');
 
           if (data.bookmark != null && data.bookmark !== location.query.bookmark || data.skip != null && data.skip + data.limit < data.total_rows) {
